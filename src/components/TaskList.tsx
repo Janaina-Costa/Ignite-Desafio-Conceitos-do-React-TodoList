@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {  useState } from 'react'
 
 import '../styles/tasklist.scss'
 
@@ -16,14 +16,35 @@ export function TaskList() {
 
   function handleCreateNewTask() {
     // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+    
+    if(!newTaskTitle)return
+
+    const newTask = {
+      id: Math.floor(Math.random() *(19999999- 11111111)+11111111),
+      title: newTaskTitle,
+      isComplete:false
+    }
+
+    setTasks(oldTaskState =>[...oldTaskState, newTask])
+    setNewTaskTitle('')
+    
+    
   }
 
   function handleToggleTaskCompletion(id: number) {
     // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+    const filterCheck = tasks.map(task=> task.id === id?{
+      ...task,
+      isComplete:!task.isComplete
+    }: task )
+    
+    setTasks(filterCheck)
   }
 
   function handleRemoveTask(id: number) {
     // Remova uma task da listagem pelo ID
+    const filterTask = tasks.filter(task=>task.id !== id)  
+    setTasks(filterTask)
   }
 
   return (
@@ -35,6 +56,7 @@ export function TaskList() {
           <input 
             type="text" 
             placeholder="Adicionar novo todo" 
+            required
             onChange={(e) => setNewTaskTitle(e.target.value)}
             value={newTaskTitle}
           />
@@ -42,6 +64,8 @@ export function TaskList() {
             <FiCheckSquare size={16} color="#fff"/>
           </button>
         </div>
+
+        
       </header>
 
       <main>
